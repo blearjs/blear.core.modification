@@ -1,6 +1,6 @@
 {
   "name": "blear.core.modification",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "DOM 修改",
   "scripts": {
     "live": "browser-sync start --config bs-config.js",
@@ -37,7 +37,6 @@
   },
   "dependencies": {},
   "peerDependencies": {
-    "blear.polyfills.sibling": "1.x",
     "blear.utils.object": "1.x",
     "blear.utils.typeis": "1.x",
     "blear.utils.json": "1.x",

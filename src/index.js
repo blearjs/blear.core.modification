@@ -9,7 +9,6 @@
 
 'use strict';
 
-var sibling =     require('blear.polyfills.sibling');
 var object =      require('blear.utils.object');
 var typeis =      require('blear.utils.typeis');
 var json =        require('blear.utils.json');
@@ -51,7 +50,7 @@ var AFTER_END = 'afterend';
  */
 exports.parse = function (htmlString) {
     divEl.innerHTML = htmlString;
-    return sibling.firstElementChild(divEl);
+    return divEl.firstElementChild;
 };
 
 
