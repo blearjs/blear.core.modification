@@ -9,25 +9,25 @@
 
 'use strict';
 
-var object =      require('blear.utils.object');
-var typeis =      require('blear.utils.typeis');
-var json =        require('blear.utils.json');
-var selector =    require('blear.core.selector');
-var attribute =   require('blear.core.attribute');
+var object = require('blear.utils.object');
+var typeis = require('blear.utils.typeis');
+var json = require('blear.utils.json');
+var selector = require('blear.core.selector');
+var attribute = require('blear.core.attribute');
 
 var doc = document;
 var headEl = selector.query('head')[0] || doc.documentElement;
 var bodyEl = doc.body;
 var divEl = doc.createElement('div');
-// <--------------- beforebegin
+// <--------------- beforebegin = 0
 // <target>
-//     <----------- afterbegin
+//     <----------- afterbegin = 1
 //     ...
 //     ...
 //     ...
-//     <----------- beforeend
+//     <----------- beforeend = 2
 // </target>
-// <--------------- afterend
+// <--------------- afterend = 3
 // 目标节点开始之前
 var BEFORE_BEGIN = 'beforebegin';
 // 目标节点开始之后
@@ -36,6 +36,12 @@ var AFTER_BEGIN = 'afterbegin';
 var BEFORE_END = 'beforeend';
 // 目标节点结束之后
 var AFTER_END = 'afterend';
+var positionArray = [
+    BEFORE_BEGIN,
+    AFTER_BEGIN,
+    BEFORE_END,
+    AFTER_END
+];
 
 
 /**
@@ -131,15 +137,15 @@ var create = exports.create = function (nodeName, attributes, properties) {
  * 将源插入到指定的目标位置，并返回指定的元素
  * @param {node|HTMLElement} source 源
  * @param {node|HTMLElement} [target] 目标
- * @param {String} [position="beforeend"] 插入位置，分别为：beforebegin、afterbegin、beforeend、afterend
+ * @param {String|Number} [position="beforeend"] 插入位置，分别为：beforebegin(0)、afterbegin(1)、beforeend(2)、afterend(3)
  * @returns {node|HTMLElement} 返回原始节点
  *
  * @example
- * // - beforebegin
+ * // - beforebegin ------ 0
  * // - <target>
- * //   - afterbegin
- * //   - beforeend
- * // - afterend
+ * //   - afterbegin ----- 1
+ * //   - beforeend ------ 2
+ * // - afterend --------- 3
  *
  * // default return target
  * modification.insert(source, target, 'beforebegin');
@@ -149,6 +155,10 @@ var create = exports.create = function (nodeName, attributes, properties) {
  */
 var insert = exports.insert = function (source, target, position) {
     position = position || 'beforeend';
+
+    if(typeis.Number(position)) {
+        position = positionArray[position];
+    }
 
     if (!target) {
         target = bodyEl;
@@ -244,18 +254,10 @@ exports.importStyle = function (cssText, sel, append) {
         insert(styleEl, headEl, 'beforeend');
     }
 
-    cssText = String(cssText);
-
     // IE
     // @fuckie
     /* istanbul ignore next */
     if (styleEl.styleSheet) {
-        // 此 BUG 仅影响 IE8（含） 以下浏览器
-        // http://support.microsoft.com/kb/262161
-        if (selector.query('style').length > 31) {
-            throw new Error('Exceed the maximal count of style tags in IE')
-        }
-
         if (append) {
             styleEl.styleSheet.cssText += cssText;
         } else {
