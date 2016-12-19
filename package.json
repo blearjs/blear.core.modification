@@ -1,6 +1,6 @@
 {
   "name": "blear.core.modification",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "DOM 修改",
   "scripts": {
     "live": "browser-sync start --config bs-config.js",
@@ -35,14 +35,14 @@
   "bugs": {
     "url": "https://github.com/blearjs/blear.core.modification/issues"
   },
-  "dependencies": {},
-  "peerDependencies": {
+  "dependencies": {
     "blear.utils.object": "1.x",
     "blear.utils.typeis": "1.x",
     "blear.utils.json": "1.x",
     "blear.core.selector": "1.x",
     "blear.core.attribute": "1.x"
   },
+  "peerDependencies": {},
   "devDependencies": {
     "blear.core.attribute": "^1.0.0",
     "blear.core.selector": "^1.0.0",
