@@ -1,6 +1,6 @@
 {
   "name": "blear.core.modification",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "DOM 修改",
   "scripts": {
     "live": "browser-sync start --config bs-config.js",

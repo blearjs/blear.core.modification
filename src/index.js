@@ -154,11 +154,11 @@ var create = exports.create = function (nodeName, attributes, properties) {
  * modification.insert(source, target, 'afterend');
  */
 var insert = exports.insert = function (source, target, position) {
-    position = position || 'beforeend';
-
     if(typeis.Number(position)) {
         position = positionArray[position];
     }
+
+    position = position || BEFORE_END;
 
     if (!target) {
         target = bodyEl;
