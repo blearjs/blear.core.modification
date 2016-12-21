@@ -51,6 +51,9 @@ describe('测试文件', function () {
             width: 100,
             height: 200
         });
+
+        var node4 = modification.create('#fragment');
+
         expect(node3.nodeType).toEqual(1);
         expect(node3.nodeName).toEqual('DIV');
         expect(node3.nodeValue).toEqual(null);
@@ -61,6 +64,7 @@ describe('测试文件', function () {
         expect(node3.getAttribute('style')).toMatch(/height:\s*200px/i);
         expect(node3.width).toEqual(100);
         expect(node3.height).toEqual(200);
+        expect(node4.nodeType).toEqual(11);
 
         done();
     });
