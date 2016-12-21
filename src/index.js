@@ -74,6 +74,9 @@ exports.parse = function (htmlString) {
  * modification.create('#comment', '123');
  * // => commentNode
  *
+ * modification.create('#fragment');
+ * // => fragmentNode
+ *
  * modification.create('div', {id:'id-123'});
  * // => DIVNode
  */
@@ -87,6 +90,10 @@ var create = exports.create = function (nodeName, attributes, properties) {
 
         case '#comment':
             node = doc.createComment(typeis.Undefined(attributes) ? '' : String(attributes));
+            break;
+
+        case '#fragment':
+            node = doc.createDocumentFragment();
             break;
 
         default:
