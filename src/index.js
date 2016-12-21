@@ -166,6 +166,7 @@ var insert = exports.insert = function (source, target, position) {
     }
 
     position = position || BEFORE_END;
+    position = position.toLowerCase();
 
     if (!target) {
         target = bodyEl;
