@@ -36,11 +36,13 @@ var AFTER_BEGIN = 'afterbegin';
 var BEFORE_END = 'beforeend';
 // 目标节点结束之后
 var AFTER_END = 'afterend';
+var REPLACE = 'replace';
 var positionArray = [
     BEFORE_BEGIN,
     AFTER_BEGIN,
     BEFORE_END,
-    AFTER_END
+    AFTER_END,
+    REPLACE
 ];
 
 
@@ -65,7 +67,7 @@ exports.parse = function (htmlString) {
  * @param {String}       nodeName       节点名称，可以为#text、#comment、tagName
  * @param {String|Object} [attributes]   节点属性
  * @param {Object} [properties]   节点特性
- * @returns {HTMLElement|Node}
+ * @returns {Node}
  *
  * @example
  * modification.create('#text', '123');
@@ -141,11 +143,11 @@ var create = exports.create = function (nodeName, attributes, properties) {
 
 
 /**
- * 将源插入到指定的目标位置，并返回指定的元素
- * @param {node|HTMLElement} source 源
- * @param {node|HTMLElement} [target] 目标
+ * 将源节点插入到指定节点的目标位置，并返回原始节点
+ * @param {Node|HTMLElement} source 源
+ * @param {Node|HTMLElement} [target] 目标
  * @param {String|Number} [position="beforeend"] 插入位置，分别为：beforebegin(0)、afterbegin(1)、beforeend(2)、afterend(3)
- * @returns {node|HTMLElement} 返回原始节点
+ * @returns {Node|HTMLElement} 返回原始节点
  *
  * @example
  * // - beforebegin ------ 0
@@ -153,15 +155,15 @@ var create = exports.create = function (nodeName, attributes, properties) {
  * //   - afterbegin ----- 1
  * //   - beforeend ------ 2
  * // - afterend --------- 3
+ * // - replace ---------- 4
  *
- * // default return target
  * modification.insert(source, target, 'beforebegin');
  * modification.insert(source, target, 'afterbegin');
  * modification.insert(source, target, 'beforeend');
  * modification.insert(source, target, 'afterend');
  */
 var insert = exports.insert = function (source, target, position) {
-    if(typeis.Number(position)) {
+    if (typeis.Number(position)) {
         position = positionArray[position];
     }
 
@@ -202,6 +204,13 @@ var insert = exports.insert = function (source, target, position) {
                 target.parentNode.appendChild(source);
             }
             break;
+
+        case REPLACE:
+            // 先插入到目标的尾部
+            insert(source, target, 3);
+            // 然后移除目标
+            remove(target);
+            break;
     }
 
     return source;
@@ -210,7 +219,7 @@ var insert = exports.insert = function (source, target, position) {
 
 /**
  * 移除某个元素
- * @param {node|HTMLElement} el
+ * @param {Node|HTMLElement} el
  *
  * @example
  * modification.remove(el);
@@ -223,6 +232,57 @@ var remove = exports.remove = function (el) {
             // ignore
         }
     }
+};
+
+
+/**
+ * 插入到目标之前，返回原始节点
+ * @param {Node|HTMLElement} source
+ * @param {Node|HTMLElement} target
+ * @returns {Node|HTMLElement}
+ */
+exports.before = function (source, target) {
+    return insert(source, target, 0);
+};
+
+/**
+ * 插入到目标内前，返回原始节点
+ * @param {Node|HTMLElement} source
+ * @param {Node|HTMLElement} target
+ * @returns {Node|HTMLElement}
+ */
+exports.prepend = function (source, target) {
+    return insert(source, target, 1);
+};
+
+/**
+ * 插入到目标内后，返回原始节点
+ * @param {Node|HTMLElement} source
+ * @param {Node|HTMLElement} target
+ * @returns {Node|HTMLElement}
+ */
+exports.append = function (source, target) {
+    return insert(source, target, 2);
+};
+
+/**
+ * 插入到目标之后，返回原始节点
+ * @param {Node|HTMLElement} source
+ * @param {Node|HTMLElement} target
+ * @returns {Node|HTMLElement}
+ */
+exports.after = function (source, target) {
+    return insert(source, target, 3);
+};
+
+/**
+ * 替换目标节点，返回原始节点
+ * @param {Node|HTMLElement} source
+ * @param {Node|HTMLElement} target
+ * @returns {Node|HTMLElement}
+ */
+exports.replace = function (source, target) {
+    return insert(source, target, 4);
 };
 
 

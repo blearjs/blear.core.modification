@@ -104,7 +104,7 @@ describe('测试文件', function () {
 
         document.body.appendChild(div2El);
         var ret1 = modification.insert(div1El, div2El, 'afterbegin');
-        var ret2 = modification.insert(div3El, div2El, 'afterbegin');
+        var ret2 = modification.insert(div3El, div2El, 1);
 
         // <div2>
         //     <div3/>
@@ -132,7 +132,7 @@ describe('测试文件', function () {
 
         document.body.appendChild(div2El);
         var ret1 = modification.insert(div1El, div2El, 'beforeend');
-        var ret2 = modification.insert(div3El, div2El, 'beforeend');
+        var ret2 = modification.insert(div3El, div2El, 2);
 
         // <div2>
         //     <div1/>
@@ -160,7 +160,7 @@ describe('测试文件', function () {
 
         document.body.appendChild(div2El);
         var ret1 = modification.insert(div1El, div2El, 'afterend');
-        var ret2 = modification.insert(div3El, div2El, 'afterend');
+        var ret2 = modification.insert(div3El, div2El, 3);
 
         // <div2/>
         // <div3/>
@@ -179,6 +179,132 @@ describe('测试文件', function () {
         expect(findEl).toBe(undefined);
 
         done();
+    });
+
+    it('.insert:replace', function () {
+        var id = 'dd2' + new Date().getTime();
+        var div1El = modification.create('div', {
+            id: id
+        });
+        var div2El = modification.create('div');
+        var div3El = modification.create('div');
+
+        document.body.appendChild(div1El);
+        div1El.appendChild(div2El);
+
+        var ret = modification.insert(div3El, div2El, 4);
+
+        expect(ret).toEqual(div3El);
+        expect(div1El.childNodes.length).toEqual(1);
+        expect(div1El.childNodes[0]).toBe(div3El);
+        modification.remove(div1El);
+    });
+
+    it('.before', function () {
+        var div1El = modification.create('div');
+        var div2El = modification.create('div');
+        var div3El = modification.create('div');
+        var div4El = modification.create('div');
+
+        div1El.appendChild(div2El);
+        div2El.appendChild(div3El);
+        // <div1>
+        //     <div4></div4>
+        //     <div2>
+        //         <div3></div3>
+        //     </div2>
+        // </div1>
+        var ret = modification.before(div4El, div2El);
+
+        expect(ret).toBe(div4El);
+        expect(div1El.firstChild).toBe(div4El);
+        expect(div1El.lastChild).toBe(div2El);
+        expect(div4El.nextSibling).toBe(div2El);
+    });
+
+    it('.prepend', function () {
+        var div1El = modification.create('div');
+        var div2El = modification.create('div');
+        var div3El = modification.create('div');
+        var div4El = modification.create('div');
+
+        div1El.appendChild(div2El);
+        div2El.appendChild(div3El);
+        // <div1>
+        //     <div2>
+        //         <div4></div4>
+        //         <div3></div3>
+        //     </div2>
+        // </div1>
+        var ret = modification.prepend(div4El, div2El);
+
+        expect(ret).toBe(div4El);
+        expect(div1El.firstChild).toBe(div2El);
+        expect(div1El.lastChild).toBe(div2El);
+        expect(div2El.firstChild).toBe(div4El);
+        expect(div2El.lastChild).toBe(div3El);
+    });
+
+    it('.append', function () {
+        var div1El = modification.create('div');
+        var div2El = modification.create('div');
+        var div3El = modification.create('div');
+        var div4El = modification.create('div');
+
+        div1El.appendChild(div2El);
+        div2El.appendChild(div3El);
+        // <div1>
+        //     <div2>
+        //         <div3></div3>
+        //         <div4></div4>
+        //     </div2>
+        // </div1>
+        var ret = modification.append(div4El, div2El);
+
+        expect(ret).toBe(div4El);
+        expect(div1El.firstChild).toBe(div2El);
+        expect(div1El.lastChild).toBe(div2El);
+        expect(div2El.firstChild).toBe(div3El);
+        expect(div2El.lastChild).toBe(div4El);
+    });
+
+    it('.after', function () {
+        var div1El = modification.create('div');
+        var div2El = modification.create('div');
+        var div3El = modification.create('div');
+        var div4El = modification.create('div');
+
+        div1El.appendChild(div2El);
+        div2El.appendChild(div3El);
+        // <div1>
+        //     <div2>
+        //         <div3></div3>
+        //     </div2>
+        //     <div4></div4>
+        // </div1>
+        var ret = modification.after(div4El, div2El);
+
+        expect(ret).toBe(div4El);
+        expect(div1El.firstChild).toBe(div2El);
+        expect(div1El.lastChild).toBe(div4El);
+    });
+
+    it('.replace', function () {
+        var div1El = modification.create('div');
+        var div2El = modification.create('div');
+        var div3El = modification.create('div');
+        var div4El = modification.create('div');
+
+        div1El.appendChild(div2El);
+        div2El.appendChild(div3El);
+        // <div1>
+        //     <div4></div4>
+        // </div1>
+        var ret = modification.replace(div4El, div2El);
+
+        expect(ret).toBe(div4El);
+        expect(div1El.firstChild).toBe(div4El);
+        expect(div1El.lastChild).toBe(div4El);
     });
 
     it('.remove', function () {
